@@ -96,44 +96,56 @@
     </section>
 
     <section>
-      <h3>What's all the buzz about containers'?</h3>
-      <p>The software industry has changed!</p>
-      <div class="fragment">
-        <h4>Before we had:</h4>
+      <section>
+        <h3>What's all the buzz about containers'?</h3>
+        <p>The software industry has changed!</p>
+      </section>
+      <section class="future">
+        <h3>Before we had:</h3>
         <ul>
             <li>monolithic applications</li>
             <li>long development cycles</li>
             <li>single environment</li>
             <li>slowly scaling up</li>
         </ul>
-      </div>
-      <div class="fragment">
-        <h4>Now we have:</h4>
+      </section>
+      <section class="future">
+        <h3>Now we have:</h3>
         <ul>
           <li>decoupled services</li>
           <li>fast, iterative improvements</li>
           <li>multiple environments</li>
           <li>quickly scaling out</li>
         </ul>
-      </div>
+      </section>
     </section>
 
     <section>
+      <section>
       <h3>Deployment becomes very complex.</h3>
-      <h4>Many different stacks:</h4>
+      <img src="img/problem.png" alt="Deployment problem" class="noborder">
+      </section>
+      <section class="future">
+      <h3>Many different stacks:</h3>
       <ul>
         <li>languages</li>
         <li>frameworks</li>
         <li>databases</li>
       </ul>
-      <h4>Many different targets:</h4>
+      </section>
+      <section class="future">
+      <h3>Many different targets:</h3>
       <ul>
         <li>individual development environments</li>
         <li>pre-production, QA, staging</li>
         <li>production: on prem, cloud, hybrid</li>
       </ul>
+      </section>
     </section>
-
+    <section>
+      <h4>Intermodal shipping containers</h4>
+      <img src="img/shipping.png" class="noborder">
+    </section>
     <section>
       <h3>What Docker gives you</h3>
       <ul>
@@ -151,69 +163,85 @@
     </section>
 
     <section>
-      <h4>Docker is a client-server application.</h4>
-      <ul>
-        <li>The Docker Engine (or "daemon")</li>
+      <section>
+      <h3>Docker is a client-server application.</h3>
+      </section>
+      <section class="future">
+        <h4>The Docker Engine (or "daemon")</h4>
           <ul>
             <li>Receives and processes incoming Docker API requests.</li>
           </ul>
-        <li>The Docker client</li>
+        </section>
+      <section class="future">
+        <h4>The Docker client</h4>
           <ul>
             <li>Talks to the Docker daemon via the Docker API.</li>
             <li>We'll use mostly the CLI embedded within the docker binary.</li>
           </ul>
-        <li>Docker Hub Registry</li>
+      </section>
+      <section class="future">
+        <h4>Docker Hub Registry</h4>
           <ul>
             <li>Collection of public images.</li>
             <li>The Docker daemon talks to it via the registry API.</li>
           </ul>
-      </ul>
+      </section>
     </section>
 
     <section>
+      <section>
       <h3>Docker Terminology</h3>
-      <h4>Images</h4>
+      </section>
+      <section class="future">
+      <h3>Images</h3>
         <p>The file system and configuration of our application which
           are used to create containers.</p>
-         </section>
-
-    <section>
-      <h4>Containers</h4>
+      </section>
+      <section class="future">
+      <h3>Containers</h3>
       <p>
         Running instances of Docker images — containers run the actual
         applications. A container includes an application and all of its
         dependencies. It shares the kernel with other containers, and runs as
         an isolated process in user space on the host OS.
       </p>
-    </section>
-
-    <section>
-      <h4>Docker daemon</h4>
+      </section>
+      <section class="future">
+      <h3>Docker daemon</h3>
       <p>
         The background service running on the host that manages building,
         running and distributing Docker containers.
       </p>
-    </section>
-
-    <section>
-      <h4>Docker client</h4>
+      </section>
+      <section class="future">
+      <h3>Docker client</h3>
       <p>
         The command line tool that allows the user to interact with the Docker daemon.
       </p>
-    </section>
-
-    <section>
-      <h4>Docker Hub</h4>
+      </section>
+      <section class="future">
+      <h3>Docker Hub</h3>
       <p>
         A registry of Docker images. You can think of the registry as a
         directory of all available Docker images. You'll be using this later in
         this tutorial.
       </p>
+      </section>
+    </section>
+    # Add history
+    <section>
+
+    <section>
+    use Play-With-Docker (instructions)
     </section>
 
     <section>
       <h3>Our First Containers</h3>
-      <p>In your Docker environment, just run the following command:</p>
+      <p>In Play-With-Docker, just run the following command:</p>
+      <pre><code class = "python">$ docker run busybox echo hello world</code></pre>
+    </section>
+
+    <section data-background="http://i.giphy.com/90F8aUepslB84.gif">
       <pre><code class = "python">$ docker run busybox echo hello world
 hello world  </code></pre>
     </section>
