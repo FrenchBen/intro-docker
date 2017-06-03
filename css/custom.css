@@ -23,6 +23,10 @@ div.left-align{
 	clear: both;
 }
 
+.small {
+    font-size: 1rem;
+}
+
 .reveal h1 {
     font-size: 2em;
 }
@@ -63,5 +67,5 @@ div.left-align{
 
 
 mark {
-    background-color: #a9a9a9;
+    background-color: #fbd4da;
 }

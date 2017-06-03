@@ -827,15 +827,19 @@ b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago</code><
     </section>
 
     <section>
-      <h3>Root namespace</h3>
-      <p>The root namespace is for official images. They are put there by Docker
-        Inc., but they are generally authored and maintained by third parties.</p>
-      <p>Those images include:</p>
-      <ul>
-        <li>Small, "swiss-army-knife" images like busybox.</li>
-        <li>Distro images to be used as bases for your builds, like ubuntu, fedora...</li>
-        <li>Ready-to-use components and services, like redis, postgresql...</li>
-      </ul>
+      <section>
+        <h3>Root namespace</h3>
+        <p>The root namespace is for official images. They are put there by Docker
+          Inc., but they are generally authored and maintained by third parties.</p>
+      </section>
+      <section class="future">
+        <h4>Those images include:</h4>
+        <ul>
+          <li>Small, "swiss-army-knife" images like busybox.</li>
+          <li>Distro images to be used as bases for your builds, like ubuntu, fedora...</li>
+          <li>Ready-to-use components and services, like redis, postgresql...</li>
+        </ul>
+      </section>
     </section>
 
     <section>
@@ -911,8 +915,8 @@ elevy/zookeeper       ZooKeeper configured t...   3                [OK]</code></
       <h3>Downloading images</h3><br>
       <p>There are two ways to download images.</p><br>
       <ul>
-        <li>Explicitly, with docker pull.</li>
-        <li>Implicitly, when executing docker run and the image is not found locally.</li>
+        <li>Explicitly, with <mark>docker pull</mark>.</li>
+        <li>Implicitly, when executing <mark>docker run</mark> and the image is not found locally.</li>
       </ul>
     </section>
 
@@ -926,7 +930,7 @@ d1881793a057: Download complete</code></pre>
       <ul>
         <li>As seen previously, images are made up of layers.</li>
         <li>Docker has downloaded all the necessary layers.</li>
-        <li>In this example, :jessie indicates which exact version of Debian
+        <li>In this example, <em>:jessie</em> indicates which exact version of Debian
           we would like. It is a version tag.</li>
       </ul>
     </section>
@@ -936,35 +940,36 @@ d1881793a057: Download complete</code></pre>
       <ul>
         <li>Images can have tags.</li>
         <li>Tags define image versions or variants.</li>
-        <li>docker pull ubuntu will refer to ubuntu:latest.</li>
-        <li>The :latest tag is generally updated often.</li>
+        <li><mark>docker pull ubuntu</mark> will refer to <em>ubuntu:latest</em>.</li>
+        <li>The <em>:latest</em> tag is generally updated often.</li>
       </ul>
     </section>
 
     <section>
-      <h3>When to (not) use tags</h3>
-      <p>Don't specify tags:</p><br>
-      <ul>
-        <li>When doing rapid testing and prototyping.</li>
-        <li>When experimenting.</li>
-        <li>When you want the latest version.</li>
-      </ul><br><br>
-      <p>Do specify tags:</p>
-      <ul>
-        <li>When recording a procedure into a script.</li>
-        <li>When going to production.</li>
-        <li>To ensure that the same version will be used everywhere.</li>
-        <li>To ensure repeatability later.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>Develop It!</h3>
-      <p>Time permitting, you can complete <a href="https://github.com/docker/labs/tree/master/beginner">these exercises</a> in class or as homework.</p>
+      <section>
+        <h3>When to not use tags</h3>
+        <p>Don't specify tags:</p><br>
+        <ul>
+          <li>When doing rapid testing and prototyping.</li>
+          <li>When experimenting.</li>
+          <li>When you want the latest version.</li>
+        </ul>
+      </section>
+      <section class="future">
+        <h3>When to use tags</h3>
+        <p>Do specify tags:</p>
+        <ul>
+          <li>When recording a procedure into a script.</li>
+          <li>When going to production.</li>
+          <li>To ensure that the same version will be used everywhere.</li>
+          <li>To ensure repeatability later.</li>
+        </ul>
+      </section>
     </section>
 
     <section>
       <h2>Questions?</h2>
+      <p><a href="class2.html">Class 2</a></p>
     </section>
 </div><!-- Close slides -->
 

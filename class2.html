@@ -106,7 +106,7 @@
 root@&lt;yourContainerId&gt;:#/</code></pre>
       <p>Run the command apt-get update to refresh the list of packages available to install.</p>
       <p>Then run the command apt-get install figlet to install the program we are interested in.</p>
-      <pre><code class = "python">root@<yourContainerId>:#/ apt-get update && apt-get install figlet
+      <pre><code class = "python">root@5954a4c4e021:#/ apt-get update &amp;&amp; apt-get install figlet
 .... OUTPUT OF APT-GET COMMANDS ....</code></pre>
     </section>
 
@@ -332,10 +332,17 @@ RUN ["apt-get", "install", "figlet"]</code></pre>
         <li>String syntax specifies a command to be wrapped within /bin/sh -c "...".</li>
       </ul>
     </section>
+    <section>
+      <h3>EXPLAIN CMD AND ENTRYPOINT!!!!</h3>
+      <p> @TODO!!!!!</p>
+    </section>
 
     <section>
       <h3>Develop It!</h3>
-      <p>Spend this time working on <a href="https://github.com/docker/labs/tree/master/beginner">Docker Labs Exercise 2.0: Webapps with Docker</a></p>
+      <p>Let's deploy a <a href="http://training.play-with-docker.com/webapps/" target="_blank">Simple WebApp</a></p>
+      <p>At this point you can copy and paste, without paying too much attention to the details</p>
+      <p class="small">Play-With-Docker has <em>vi</em> as it's editor of choice - if you're not familiar with it, you can install <em>nano</em> via:</p>
+      <pre><code class="python">apk add --update nano</code></pre>
     </section>
 
     <section>
@@ -525,8 +532,8 @@ EXPOSE 53/tcp 53/udp</code></pre>
       <ul>
         <li>All ports are private by default.</li>
         <li>The Dockerfile doesn't control if a port is publicly available.</li>
-        <li>When you docker run -p <port> ..., that port becomes public. (Even if it was not declared with EXPOSE.)</li>
-        <li>When you docker run -P ... (without port number), all ports declared with EXPOSE become public.</li>
+        <li>When you <mark>docker run -p &lt;port&gt; ...</mark>, that port becomes public. (Even if it was not declared with EXPOSE.)</li>
+        <li>When you <mark>docker run -P ...</mark> (without port number), all ports declared with EXPOSE become public.</li>
       </ul>
     </section>
 
@@ -629,7 +636,7 @@ etc.</code></pre>
     <section>
       <h3>Specifying a name</h3>
       <p>You can set the name of the container when you create it.</p>
-      <pre><code class = "python">$ docker run --name ticktock jpetazzo/clock</code></pre>
+      <pre><code class = "python">$ docker run --name ticktock frenchben/clock</code></pre>
       <p>If you specify a name that already exists, Docker will refuse to create the container.</p>
       <p>This lets us enforce unicity of a given resource.</p>
     </section>
@@ -690,23 +697,25 @@ etc.</code></pre>
     <section>
       <h3>Resources</h3>
       <ul>
-        <li><a href="https://github.com/docker/labs/tree/master/networking">Networking with Docker Containers</a> Tutorial</li>
-        <li><a href="http://www.docker.com/">Docker homepage</a></li>
-        <li><a href="https://hub.docker.com">Docker Hub</a></li>
-        <li><a href="ttp://blog.docker.com/">Docker blog</a></li>
-        <li><a href="ttp://docs.docker.com/">Docker documentation</a></li>
+        <li><a href="http://training.play-with-docker.com/" target="_blank">Training via Play-With-Docker</a></li>
+        <li><a href="https://github.com/docker/labs/tree/master/networking" target="_blank">Networking with Docker Containers</a> Tutorial</li>
+        <li><a href="http://www.docker.com/" target="_blank">Docker homepage</a></li>
+        <li><a href="https://hub.docker.com" target="_blank">Docker Hub</a></li>
+        <li><a href="ttp://blog.docker.com/" target="_blank">Docker blog</a></li>
+        <li><a href="ttp://docs.docker.com/" target="_blank">Docker documentation</a></li>
       </ul>
     </section>
 
     <section>
       <h3>Resources</h3>
       <ul>
-        <li><a href="http://www.docker.com/gettingstarted/">Docker Getting Started Guide</a></li>
-        <li><a href="https://github.com/docker/docker">Docker code on GitHub</a></li>
-        <li><a href="https://groups.google.com/forum/#!forum/docker-user">Docker mailing list</a></li>
+        <li><a href="http://www.docker.com/gettingstarted/" target="_blank">Docker Getting Started Guide</a></li>
+        <li><a href="https://github.com/docker/docker" target="_blank">Docker code on GitHub</a></li>
+        <li><a href="https://community.docker.com/registrations/groups/4316" target="_blank">Docker Community Slack</a></li>
+        <li><a href="https://groups.google.com/forum/#!forum/docker-user" target="_blank">Docker mailing list</a></li>
         <li>Docker on IRC: irc.freenode.net and channels #docker and #docker-dev</li>
-        <li>Docker on <a href="http://twitter.com/docker">Twitter</a></li>
-        <li>Get Docker help on <a href="http://stackoverflow.com/ ">Stack Overflow</a> search?q=docker</li>
+        <li>Docker on <a href="http://twitter.com/docker" target="_blank">Twitter</a></li>
+        <li>Get Docker help on <a href="http://stackoverflow.com/search?q=docker" target="_blank">Stack Overflow</a></li>
       </ul>
     </section>
 
