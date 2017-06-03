@@ -60,3 +60,8 @@ div.left-align{
     position: static;
     width: auto;
 }
+
+
+mark {
+    background-color: #a9a9a9;
+}
