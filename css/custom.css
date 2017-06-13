@@ -69,3 +69,14 @@ div.left-align{
 mark {
     background-color: #fbd4da;
 }
+
+.reveal .sl-block {
+    display: flex;
+    z-index: auto;
+    justify-content: space-around;
+    align-items: center;
+}
+.reveal .sl-block .flexed {
+    width: 50%;
+    height: auto;
+}

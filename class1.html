@@ -6,9 +6,7 @@
 
   	<title>Intro to Docker ~ Girl Develop It</title>
 
-    <meta name="description" content="This course was adapted from Docker's Intro to Docker material, which can be found at http://view.dckr.info/DockerIntro.pdf.
-
-		The course is meant to be taught in four to six hours of classroom time. Each of the slides and practice files are customizable according to the needs of a given class or audience.">
+    <meta name="description" content="Girl Develop It is partnering with Docker on this beginner-level course, which will introduce you to the Docker platform and take you through installing, integrating, and running Docker in your working environment to make it easier to create, deploy, and run applications by using containers.">
 		<meta name="author" content="Girl Develop It">
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -78,7 +76,7 @@
       <ul>
         <li>Who are you?</li>
         <li>What do you hope to get out of the class?</li>
-        <li>Who was your favorite character as a child?</li>
+        <li>If you were a food what would you be?</li>
       </ul>
       </div>
     </section>
@@ -97,7 +95,7 @@
 
     <section>
       <section>
-        <h3>What's all the buzz about containers'?</h3>
+        <h3>What's all the buzz about containers?</h3>
         <p>The software industry has changed!</p>
       </section>
       <section class="future">
@@ -237,9 +235,9 @@
           </ul>
       </section>
       <section class="future">
-        <h4>Docker Hub Registry</h4>
+        <h4>Docker Store</h4>
           <ul>
-            <li>Collection of public images.</li>
+            <li>Collection of certified and public images.</li>
             <li>The Docker daemon talks to it via the registry API.</li>
           </ul>
       </section>
@@ -277,7 +275,7 @@
       </p>
       </section>
       <section class="future">
-      <h3>Docker Hub</h3>
+      <h3>Docker Registry</h3>
       <p>
         A registry of Docker images. You can think of the registry as a
         directory of all available Docker images. You'll be using this later in
@@ -310,7 +308,7 @@
       <p class="small"><em>the full syntax is <pre><code class = "python">$ docker container run ..</code></pre> but the above shorthand is widely used</em></p>
     </section>
 
-    <section data-background="http://i.giphy.com/90F8aUepslB84.gif">
+    <section data-background="/img/wow.gif">
       <pre><code class = "python">$ docker run busybox echo hello world
 hello world  </code></pre>
     </section>
@@ -622,31 +620,12 @@ b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago</code><
 
     <section>
       <section>
-      <h3>Specifying a custom detach sequence</h3>
-      <ul>
-        <li>You don't like ^P^Q? No problem!</li>
-        <li>You can change the sequence with docker run --detach-keys.</li>
-        <li>This can also be passed as a global option to the engine.</li>
-      </ul>
-      </section>
-      <section class="future">
-      <p>Start a container with a custom detach command:</p>
-      <pre><code class = "python">$ docker run -ti --detach-keys ctrl-x,x frenchben/clock</code></pre>
-      <p>Detach by hitting ^X x. (This is ctrl-x then x, not ctrl-x twice!)</p>
-      <p>Check that our container is still running:</p>
-      <pre><code class = "python">$ docker ps -l</code></pre>
-      </section>
-    </section>
-
-    <section>
-      <section>
       <h3>Attaching to a container</h3>
       <p>You can attach to a container:</p>
       <pre><code class = "python">$ docker attach &lt;containerID&gt;</code></pre>
       <ul>
         <li>The container must be running.</li>
         <li>There can be multiple clients attached to the same container.</li>
-        <li>If you don't specify --detach-keys when attaching, it defaults back to ^P^Q.</li>
       </ul>
       </section>
       <section class="future">
@@ -844,10 +823,10 @@ b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago</code><
 
     <section>
       <h3>User namespace</h3>
-      <p>The user namespace holds images for Docker Hub users and organizations.</p>
+      <p>The user namespace holds images for Docker users and organizations.</p>
       <p>For example:</p>
       <pre><code class = "python">frenchben/clock</code></pre>
-      <p>The Docker Hub user is:</p>
+      <p>The Docker ID user is:</p>
       <pre><code class = "python">frenchben</code></pre>
       <p>The image name is:</p>
       <pre><code class = "python">clock</code></pre>
@@ -855,7 +834,7 @@ b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago</code><
 
     <section>
       <h3>Self-hosted namespace</h3>
-      <p>This namespace holds images which are not hosted on Docker Hub, but on third party registries.</p>
+      <p>This namespace holds images which are not hosted on Docker Store, but on third party registries.</p>
       <p>They contain the hostname (or IP address), and optionally the port, of the registry server.</p>
       <p>For example:</p>
       <pre><code class = "python">localhost:5000/wordpres</code></pre>
@@ -906,7 +885,7 @@ elevy/zookeeper       ZooKeeper configured t...   3                [OK]</code></
       <ul>
         <li>"Stars" indicate the popularity of the image.</li>
         <li>"Official" images are those in the root namespace.</li>
-        <li>"Automated" images are built automatically by the Docker Hub.
+        <li>"Automated" images are built automatically by the Docker Cloud.
           (This means that their build recipe is always available.)</li>
       </ul>
     </section>

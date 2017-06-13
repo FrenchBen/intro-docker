@@ -6,9 +6,7 @@
 
   	<title>Intro to Docker ~ Girl Develop It</title>
 
-    <meta name="description" content="This course was adapted from Docker's Intro to Docker material, which can be found at http://view.dckr.info/DockerIntro.pdf.
-
-		The course is meant to be taught in four to six hours of classroom time. Each of the slides and practice files are customizable according to the needs of a given class or audience.">
+    <meta name="description" content="Girl Develop It is partnering with Docker on this beginner-level course, which will introduce you to the Docker platform and take you through installing, integrating, and running Docker in your working environment to make it easier to create, deploy, and run applications by using containers.">
 		<meta name="author" content="Girl Develop It">
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -80,6 +78,8 @@
         <li class ="fragment">Copying files during a build</li>
         <li class ="fragment">Advanced Dockerfiles</li>
         <li class="fragment">Naming &amp; inspecting containers</li>
+        <li class="fragment">Compose</li>
+        <li class="fragment">Networking</li>
         <li class="fragment">Resources</li>
       </ul>
     </section>
@@ -333,99 +333,6 @@ RUN ["apt-get", "install", "figlet"]</code></pre>
       </ul>
     </section>
     <section>
-      <h3>EXPLAIN CMD AND ENTRYPOINT!!!!</h3>
-      <p> @TODO!!!!!</p>
-    </section>
-
-    <section>
-      <h3>Develop It!</h3>
-      <p>Let's deploy a <a href="http://training.play-with-docker.com/webapps/" target="_blank">Simple WebApp</a></p>
-      <p>At this point you can copy and paste, without paying too much attention to the details</p>
-      <p class="small">Play-With-Docker has <em>vi</em> as it's editor of choice - if you're not familiar with it, you can install <em>nano</em> via:</p>
-      <pre><code class="python">apk add --update nano</code></pre>
-    </section>
-
-    <section>
-
-      <h3>Copying the files during the build</h3>
-      <p>So far, we have installed things in our container images by downloading packages.</p>
-      <p>We can also copy files from the build context to the container that we are building.</p>
-      <p><em>Remember:</em> the build context is the directory containing the Dockerfile.</p>
-      <p>Next, we will learn a new Dockerfile keyword: COPY.</p>
-    </section>
-
-    <section>
-      <h3>Build some C code</h3>
-      <p>We want to build a container that compiles a basic "Hello world" program in C.</p>
-      <p>Here is the program, hello.c:</p>
-      <pre><code class = "python">int main () {
-puts("Hello, world!");
-return 0; }</code></pre>
-      <p>Let's create a new directory, and put this file in there.</p>
-      <p>Then we will write the Dockerfile.</p>
-    </section>
-
-    <section>
-      <h3>The Dockerfile</h3>
-      <p>On Debian and Ubuntu, the package build-essential will get us a compiler.</p>
-      <p>When installing it, don't forget to specify the -y flag, otherwise the build will fail (since the build cannot be interactive).</p>
-      <p>Then we will use COPY to place the source file into the container.</p>
-      <pre><code class = "python">FROM ubuntu
-RUN apt-get update
-RUN apt-get install -y build-essential
-COPY hello.c /
-RUN make hello
-CMD /hello</code></pre>
-      <p>Create this Dockerfile.</p>
-    </section>
-
-    <section>
-      <h3>Testing our C program</h3>
-      <ul>
-        <li>Create hello.c and Dockerfile in the same directory.</li>
-        <li>Run docker build -t hello . in this directory.</li>
-        <li>Run docker run hello, you should see Hello, world!.</li>
-      </ul>
-      <p>Success!</p>
-    </section>
-
-    <section>
-      <h3>COPY and the build cache</h3>
-      <ul>
-        <li>Run the build again.</li>
-        <li>Now, modify hello.c and run the build again.</li>
-        <li>Docker can cache steps involving COPY.</li>
-        <li>Those steps will not be executed again if the files haven't been changed.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>Details</h3>
-      <ul>
-        <li>You can COPY whole directories recursively.</li>
-        <li>Older Dockerfiles also have the ADD instruction. It is similar but can automatically extract archives.</li>
-        <li>If we really wanted to compile C code in a compiler, we would:
-            <ul>
-              <li>Place it in a different directory, with the WORKDIR instruction.</li>
-              <li>Even better, use the gcc official image.</li>
-            </ul></li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>Advanced Dockerfiles</h3>
-      <h4>Usage Summary</h4>
-      <ul>
-        <li>Dockerfile instructions are executed in order.</li>
-        <li>Each instruction creates a new layer in the image.</li>
-        <li>Instructions are cached. If no changes are detected then the instruction is skipped and the cached layer used.</li>
-        <li>The FROM instruction MUST be the first non-comment instruction.</li>
-        <li>Lines starting with # are treated as comments.</li>
-        <li>You can only have one CMD and one ENTRYPOINT instruction in a Dockerfile.</li>
-      </ul>
-    </section>
-
-    <section>
       <h3>The FROM instruction</h3>
       <ul>
         <li>Specifies the source image to build this image.</li>
@@ -458,35 +365,6 @@ FROM fedora:20 .. .</code></pre>
     </section>
 
     <section>
-      <h3>A use case for multiple FROM lines</h3>
-      <p>Integrate CI and unit tests in the build system</p>
-      <pre><code class = "python">FROM &lt;baseimage&gt;
-RUN &lt;install dependencies&gt;
-COPY &lt;code&gt;
-RUN &lt;build code&gt;
-RUN &lt;install test dependencies&gt;
-COPY &lt;test data sets and fixtures&gt;
-RUN &lt;unit tests&gt;
-FROM &lt;baseimage&gt;
-RUN &lt;install dependencies&gt;
-COPY &lt;vcode&gt;
-RUN vbuild code&gt;
-CMD, EXPOSE ...</code></pre>
-      <ul>
-        <li>The build fails as soon as an instructions fails</li>
-        <li>If RUN <unit tests> fails, the build doesn't produce an image</li>
-        <li>If it succeeds, it produces a clean image (without test libraries and data)</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>The MAINTAINER instruction</h3>
-      <p>The MAINTAINER instruction tells you who wrote the Dockerfile.</p>
-      <pre><code class = "python">MAINTAINER Docker Education Team &lt;education@docker.com&gt;</code></pre>
-      <p>It's optional but recommended.</p>
-    </section>
-
-    <section>
       <h3>The RUN instruction</h3>
       <p>The RUN instruction can be specified in two ways.</p>
       <p>With shell wrapping, which runs the specified command inside a shell, with /bin/sh -c:</p>
@@ -513,34 +391,48 @@ images that don't have /bin/sh:</p>
     </section>
 
     <section>
-      <h3>Collapsing layers</h3>
-      <p>It is possible to execute multiple commands in a single step:</p>
-      <pre><code class = "python">RUN apt-get update &amp;&amp; apt-get install -y wget &amp;&amp; apt-get clean</code></pre>
-      <p>It is also possible to break a command onto multiple lines:</p>
-      <p>It is possible to execute multiple commands in a single step:</p>
-      <pre><code class = "python">RUN apt-get update \
-&amp;&amp; apt-get install -y wget \
-&amp;&amp; apt-get clean</code></pre>
+      <section>
+        <h3>ENTRYPOINT vs CMD</h3>
+        <p>There are 2 types of commands that a container runs when we type <mark>docker run</mark></p>
+        <ul>
+          <li class="fragment"><a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">ENTRYPOINT</a>: allows you to configure a container that will run as an executable. (optional)</li>
+          <li class="fragment"><a href="https://docs.docker.com/engine/reference/builder/#cmd" target="_blank">CMD</a>: provide defaults for an executing container.</li>
+        </ul>
+      </section>
+      <section class="future">
+        <h3>ENTRYPOINT vs CMD (example)</h3>
+        <p>Re-using our figlet image, we can add a <mark>CMD</mark></p>
+        <pre><code class = "python">FROM ubuntu
+RUN apt-get update
+RUN apt-get install figlet
+CMD ["figlet","hello","world"]</code></pre>
+        <p>What happens when you run it?</p>
+      </section>
+      <section class="future">
+        <h3>ENTRYPOINT vs CMD (example)</h3>
+        <p>Re-using our figlet image, we can add an <mark>ENTRYPOINT</mark></p>
+        <pre><code class = "python">FROM ubuntu
+RUN apt-get update
+RUN apt-get install figlet
+ENTRYPOINT ["figlet"]
+CMD ["hello","world"]</code></pre>
+        <p>What happens when you run it this time?</p>
+      </section>
+      <section class="future">
+        <h3>ENTRYPOINT vs CMD (example)</h3>
+        <p>What did we gain by adding the <mark>ENTRYPOINT</mark>?</p>
+        <p>Our "hello world" text became the input to our ENTRYPOINT. <br/>This means that we can pass other text to it.</p>
+        <p> Try it out with something like <br/><mark>docker run figlet I love GDI</mark></p>
+        <img src="/img/confetti.gif" class="noborder" />
+      </section>
     </section>
 
     <section>
-      <h3>The EXPOSE instruction</h3>
-      <p>The EXPOSE instruction tells Docker what ports are to be published in this image.</p>
-      <pre><code class = "python">EXPOSE 8080
-EXPOSE 80 443
-EXPOSE 53/tcp 53/udp</code></pre>
-      <ul>
-        <li>All ports are private by default.</li>
-        <li>The Dockerfile doesn't control if a port is publicly available.</li>
-        <li>When you <mark>docker run -p &lt;port&gt; ...</mark>, that port becomes public. (Even if it was not declared with EXPOSE.)</li>
-        <li>When you <mark>docker run -P ...</mark> (without port number), all ports declared with EXPOSE become public.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>The EXPOSE instruction</h3>
-      <p>A <em>public port</em> is reachable from other containers and from outside the host. </p>
-      <p>A <em>private port</em> is not reachable from outside.</p>
+      <h3>Copying the files during the build</h3>
+      <p>So far, we have installed things in our container images by downloading packages.</p>
+      <p>We can also copy files from the build context to the container that we are building.</p>
+      <p><em>Remember:</em> the build context is the directory containing the Dockerfile.</p>
+      <p>Next, we will learn a new Dockerfile keyword: COPY.</p>
     </section>
 
     <section>
@@ -584,144 +476,460 @@ has changed.</li>
     </section>
 
     <section>
-      <h3>More Advanced Dockerfile Instructions</h3>
+      <h3>Build some python code</h3>
+      <p>We want to build a container that runs a basic "Hello world" program in python.</p>
+      <p>Here is the program, hello.py:</p>
+      <pre><code class = "python">print("Hello World.")</code></pre>
+      <p>Let's create a new directory, and put this file in there.</p>
+      <p>Then we will write the Dockerfile.</p>
+    </section>
+
+    <section>
+      <h3>The Dockerfile</h3>
+      <p>The <a href="https://store.docker.com/images/python" target="_blank">Docker Store</a> has a pre-built image with Python 2.7 in it - Let's use it!</p>
+      <p>Then we will use COPY to place the source file into the container.</p>
+      <pre><code class = "python">FROM python:2.7
+COPY hello.py /
+CMD ["python", "/hello.py"]</code></pre>
+      <p>Create this Dockerfile.</p>
+    </section>
+
+    <section>
+      <h3>Testing our python program</h3>
       <ul>
-        <li>VOLUME: tells Docker that a specific directory should be a volume.
-</li>
-        <li>WORKDIR: sets the working directory for subsequent instructions.</li>
-        <li>ENV: specifies environment variables that should be set in any container
-launched from the image.</li>
-        <li>USER: sets the user name or UID to use when running the image.</li>
-        <li>CMD: a default command run when a container is launched from the
-image.</li>
-        <li>ENTRYPOINT: like the CMD instruction, but arguments given on the
-command line are appended to the entry point.</li>
+        <li>Create hello.py and Dockerfile in the same directory.</li>
+        <li>Run docker build -t hello . in this directory.</li>
+        <li>Run <mark>docker run hello</mark>, you should see Hello, world!.</li>
+      </ul>
+      <p>Success!</p>
+    </section>
+  
+    <section>
+      <h3>COPY and the build cache</h3>
+      <ul>
+        <li>Run the build again.</li>
+        <li>Now, modify hello.py and run the build again.</li>
+        <li>Docker can cache steps involving COPY.</li>
+        <li>Those steps will not be executed again if the files haven't been changed.</li>
       </ul>
     </section>
 
     <section>
-      <h3>More Advanced Dockerfile Instructions</h3>
+      <h3>Details</h3>
       <ul>
-        <li>ONBUILD: lets you stash instructions that will be executed when this image is used as a base for another one.</li>
-        <li>LABEL: adds arbitrary metadata to the image.</li>
-        <li>ARG: defines build-time variables (optional or mandatory).</li>
-        <li>STOPSIGNAL: sets the signal for docker stop (TERM by default).</li>
-        <li>HEALTHCHECK: defines a command assessing the status of the container.</li>
-        <li>SHELL: sets the default program to use for string-syntax RUN, CMD, etc.</li>
+        <li>You can COPY whole directories recursively.</li>
+        <li>Older Dockerfiles also have the ADD instruction. It is similar but can automatically extract archives.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Naming and Inspecting Containers</h3>
-      <p>So far, we have referenced containers with their ID.</p>
-      <p>We have copy-pasted the ID, or used a shortened prefix.</p>
-      <p>But each container can also be referenced by its name.</p>
-      <p>If a container is named prod-db, I can do:</p>
-      <pre><code class = "python">$ docker logs prod-db
-$ docker stop prod-db
-etc.</code></pre>
-    </section>
-
-    <section>
-      <h3>Default names</h3>
-      <p>When we create a container, if we don't give a specific name, Docker will pick one for us.</p>
-      <p>It will be the concatenation of:</p>
+      <h3>Advanced Dockerfiles</h3>
+      <h4>Usage Summary</h4>
       <ul>
-        <li>A mood (furious, goofy, suspicious, boring...)</li>
-        <li>The name of a famous inventor (tesla, darwin, wozniak...)</li>
-      </ul><br><br>
-      <p>Examples: happy_curie, clever_hopper, jovial_lovelace</p>
-    </section>
-
-    <section>
-      <h3>Specifying a name</h3>
-      <p>You can set the name of the container when you create it.</p>
-      <pre><code class = "python">$ docker run --name ticktock frenchben/clock</code></pre>
-      <p>If you specify a name that already exists, Docker will refuse to create the container.</p>
-      <p>This lets us enforce unicity of a given resource.</p>
-    </section>
-
-    <section>
-      <h3>Renaming containers</h3>
-      <ul>
-        <li>You can rename containers with docker rename.</li>
-        <li>This allows you to "free up" a name without destroying the associated container.</li>
+        <li>Dockerfile instructions are executed in order.</li>
+        <li>Each instruction creates a new layer in the image.</li>
+        <li>Instructions are cached. If no changes are detected then the instruction is skipped and the cached layer used.</li>
+        <li>The FROM instruction MUST be the first non-comment instruction.</li>
+        <li>Lines starting with # are treated as comments.</li>
+        <li>You can only have one CMD and one ENTRYPOINT instruction in a Dockerfile.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Inspecting a container</h3>
-      <pre><code class = "python">$ docker inspect &lt;containerID&gt;
-[{
-"AppArmorProfile": "",
-"Args": [],
-"Config": {
-    "AttachStderr": true,
-    "AttachStdin": false,
-    "AttachStdout": true,
-    "Cmd": [
-    "bash"
-    ],
-    "CpuShares": 0,
-...</code></pre>
-      <p>There are multiple ways to consume that information.</p>
-    </section>
-
-    <section>
-      <h3>Parsing JSON with the Shell</h3>
+      <h3>The EXPOSE instruction</h3>
+      <p>The EXPOSE instruction tells Docker what ports are to be published in this image.</p>
+      <pre><code class = "python">EXPOSE 8080
+EXPOSE 80 443
+EXPOSE 53/tcp 53/udp</code></pre>
       <ul>
-        <li>You could grep and cut or awk the output of docker inspect.</li>
-        <li>Please, don't.</li>
-        <li>It's painful.</li>
-        <li>If you really must parse JSON from the Shell, use JQ!
-(It's great.)</li>
-      </ul>
-      <pre><code class = "python">$ docker inspect &lt;containerID&gt; | jq .</code></pre>
-      <p>We will see a better solution which doesn't require extra tools.</p>
-    </section>
-
-    <section>
-      <h3>Using --format</h3>
-      <p>You can specify a format string, which will be parsed by Go's text/template package.
-</p>
-      <pre><code class = "python">$ docker inspect --format '{{ json .Created }}' <containerID>
-"2015-02-24T07:21:11.712240394Z"</code></pre>
-      <ul>
-        <li>The generic syntax is to wrap the expression with double curly braces.</li>
-        <li>The expression starts with a dot representing the JSON object.</li>
-        <li>Then each field or member can be accessed in dotted notation syntax.</li>
-        <li>The optional json keyword asks for valid JSON output. (e.g. here it adds the surrounding double-quotes.)</li>
+        <li>All ports are private by default.</li>
+        <li>The Dockerfile doesn't control if a port is publicly available.</li>
+        <li>When you <mark>docker run -p &lt;port&gt; ...</mark>, that port becomes public. (Even if it was not declared with EXPOSE.)</li>
+        <li>When you <mark>docker run -P ...</mark> (without port number), all ports declared with EXPOSE become public.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Resources</h3>
-      <ul>
-        <li><a href="http://training.play-with-docker.com/" target="_blank">Training via Play-With-Docker</a></li>
-        <li><a href="https://github.com/docker/labs/tree/master/networking" target="_blank">Networking with Docker Containers</a> Tutorial</li>
-        <li><a href="http://www.docker.com/" target="_blank">Docker homepage</a></li>
-        <li><a href="https://hub.docker.com" target="_blank">Docker Hub</a></li>
-        <li><a href="ttp://blog.docker.com/" target="_blank">Docker blog</a></li>
-        <li><a href="ttp://docs.docker.com/" target="_blank">Docker documentation</a></li>
-      </ul>
+      <h3>The EXPOSE instruction</h3>
+      <p>A <em>public port</em> is reachable from other containers and from outside the host. </p>
+      <p>A <em>private port</em> is not reachable from outside.</p>
+    </section>
+  
+    <section>
+      <h3>Develop It!</h3>
+      <p>Let's deploy a <a href="http://training.play-with-docker.com/webapps/" target="_blank">Simple WebApp</a></p>
+      <p>At this point you can copy and paste, without paying too much attention to the details</p>
+      <p class="small">Play-With-Docker has <em>vi</em> as it's editor of choice - if you're not familiar with it, you can install <em>nano</em> or <em>emacs</em> via:</p>
+      <pre><code class="python">apk add --update nano</code></pre>
     </section>
 
     <section>
-      <h3>Resources</h3>
-      <ul>
-        <li><a href="http://www.docker.com/gettingstarted/" target="_blank">Docker Getting Started Guide</a></li>
-        <li><a href="https://github.com/docker/docker" target="_blank">Docker code on GitHub</a></li>
-        <li><a href="https://community.docker.com/registrations/groups/4316" target="_blank">Docker Community Slack</a></li>
-        <li><a href="https://groups.google.com/forum/#!forum/docker-user" target="_blank">Docker mailing list</a></li>
-        <li>Docker on IRC: irc.freenode.net and channels #docker and #docker-dev</li>
-        <li>Docker on <a href="http://twitter.com/docker" target="_blank">Twitter</a></li>
-        <li>Get Docker help on <a href="http://stackoverflow.com/search?q=docker" target="_blank">Stack Overflow</a></li>
-      </ul>
+      <section>
+        <h3>More Advanced Dockerfile Instructions</h3>
+        <ul>
+          <li>VOLUME: tells Docker that a specific directory should be a volume.
+  </li>
+          <li>WORKDIR: sets the working directory for subsequent instructions.</li>
+          <li>ENV: specifies environment variables that should be set in any container
+  launched from the image.</li>
+          <li>USER: sets the user name or UID to use when running the image.</li>
+          <li>CMD: a default command run when a container is launched from the
+  image.</li>
+          <li>ENTRYPOINT: like the CMD instruction, but arguments given on the
+  command line are appended to the entry point.</li>
+        </ul>
+      </section>
+      <section class="future">
+        <h3>More Advanced Dockerfile Instructions</h3>
+        <ul>
+          <li>ONBUILD: lets you stash instructions that will be executed when this image is used as a base for another one.</li>
+          <li>LABEL: adds arbitrary metadata to the image.</li>
+          <li>ARG: defines build-time variables (optional or mandatory).</li>
+          <li>STOPSIGNAL: sets the signal for docker stop (TERM by default).</li>
+          <li>HEALTHCHECK: defines a command assessing the status of the container.</li>
+          <li>SHELL: sets the default program to use for string-syntax RUN, CMD, etc.</li>
+        </ul>
+        <p>See the Docker <a href="https://docs.docker.com/engine/reference/builder/" target="_blank">Docs</a> for more info.</p>
+      </section>
     </section>
 
     <section>
-      <h2>Questions?</h2>
+      <section>
+        <h3>How containers communicate</h3>
+        <img src="/img/docker-networking.png" class="noborder" />
+        <p>When a container is created, it is automatically added to the default docker network for internet access.</p>
+        <p>Putting containers on a common network will allow them to communicate.</p>
+      </section>
+      <section class="future">
+        <h3>Containers and Networking</h3>
+        <p>Docker includes support for networking containers through the use of <a href="https://docs.docker.com/engine/userguide/networking/" target="_blank">network drivers.</a></p>
+        <p>The network named bridge is a special network. Unless you tell it otherwise, Docker always launches your containers in this network.</p>
+        <p>For the sake of time, this will be our focus today.</p>
+      </section>
     </section>
+
+    
+    <section>
+      <h3>Viewing networks</h3>
+      <p>The <mark>docker network</mark> command is used to list/create/remove networks</p>
+      <p>You can view existing networks with:</p>
+      <pre><code class = "python">$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+d3ffe2cbbaa0        bridge              bridge              local
+b90ba3af1b4c        host                host                local
+94227f727e5b        none                null                local 
+      </code></pre>
+    </section>
+    <section>
+      <h3>Let&apos;s create our first network!</h3>
+      <pre><code class = "python">$ docker network create gdi
+8a1f166b588ad95e63f62e950710c34a15c0e0719ca5f35dd5a34019be56663a</code></pre>
+      <p>And verify that it was created.</p>
+      <pre><code class = "python">$ docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+d3ffe2cbbaa0        bridge              bridge              local
+8a1f166b588a        gdi                 bridge              local
+b90ba3af1b4c        host                host                local
+94227f727e5b        none                null                local
+      </code></pre>
+    </section>
+    <section>
+      <section>
+        <h3>Connecting our containers</h3>
+        <p>We'll create a simple hello world container and verify that we can talk to it</p>
+        <pre><code class = "python">$ docker run -itd --name web --net gdi nginx
+  e728c2c6b08bc5203cd1f51fc07e17656e5899b21edcb4345db4f51cd93c2777</code></pre>
+        <p><mark>-d</mark> tells Docker to run the image in the background</p>
+        <p><mark>--name</mark> specify an easy to remember name for our container</p>
+      </section>
+      <section class="future">
+        <h4>Connecting our containers (cont'd)</h4>
+        <p>And create a second container on the same network that will talk to it!</p>
+        <pre><code class = "python">$ docker run -it --net gdi frenchben/ping:latest
+  root@27a2170f810a:/# ping web
+  PING web (172.19.0.2) 56(84) bytes of data.
+  64 bytes from web.gdi (172.19.0.2): icmp_seq=1 ttl=64 time=2.98 ms
+  64 bytes from web.gdi (172.19.0.2): icmp_seq=2 ttl=64 time=0.061 ms</code></pre>
+      </section>
+      <section class="future">
+        <h4>Connecting our containers (cont'd)</h4>
+        <pre><code class = "python">root@27a2170f810a:/# curl http://web
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href="http://nginx.org/"&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href="http://nginx.com/"&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you for using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+  </code></pre>
+      </section>
+    </section>
+    <section>
+      <section>
+        <h3>Playing with networks</h3>
+        <p>We can disconnect our containers from a certain network.</p>
+        <pre><code class="python">$ docker network disconnect gdi web</code></pre>
+        <p>Re-create the ping container and verify that "web" cannot be reached.</p>
+      </section>
+      <section class="future">
+        <h4>Playing with networks</h4>
+        <p>We can also reconnect our containers to a certain network.</p>
+        <pre><code class="python">$ docker network connect gdi web</code></pre>
+        <p>Re-create the ping container and verify that "web" can be reached again.</p>
+        <img src="/img/iam-networking.gif" class="noborder" />
+      </section>
+    </section>
+
+    <section>
+      <h3>Simplifying the process</h3>
+      <p>Networking is cool, but all of this typing is annoying and error prone.</p>
+      <img src="/img/typing.gif" class="noborder" />
+      <p>Let's automate some of this!</p>
+    </section>
+    <section>
+      <section>
+        <h3>Why Docker-Compose?</h3>
+        <p>Dockerfiles are great to build a single container.</p>
+        <p>But when you want to start a complex stack made of multiple containers, you need a different tool. This tool is <a href="https://docs.docker.com/compose/overview/" target="_blank">Docker Compose</a>.</p>
+      </section>
+      <section class="future">
+        <h4>What is Docker Compose?</h4>
+        <p>Docker Compose (formerly known as fig) is an external tool.</p>
+        <p>It is optional (you do not need Compose to run Docker and containers) but we recommend it highly!</p>
+        <p>The general idea of Compose is to enable a very simple, powerful onboarding workflow:</p>
+        <ol>
+          <li>Clone your code.</li>
+          <li>Run docker-compose up.</li>
+          <li>Your app is up and running!</li>
+        </ol>
+      </section>
+    </section>
+    
+    <section>
+      <section>
+        <h3>Compose Overview</h3>
+        <p>This is how you work with Compose:</p>
+        <ul>
+          <li>You describe a set (or stack) of containers in a YAML file called <em>docker-compose.yml</em>.</li>
+          <li>You run docker-compose up.</li>
+          <li>Compose automatically pulls images, builds containers, and starts them.</li>
+          <li>Compose can set up links, volumes, and other Docker options for you.</li>
+          <li>Compose can run the containers in the background, or in the foreground.</li>
+          <li>When containers are running in the foreground, their aggregated output is shown.</li>
+        </ul>
+        <p>Before diving in, let's see a small example of Compose in action.</p>
+      </section>
+      <section class="future">
+        <h4>Compose in action</h4>
+        <img src="/img/composeup.gif" class="noborder" />
+      </section>
+    </section>
+      
+    <section>
+      <section>
+        <h3>Let's develop it</h3>
+        <p>We are going to create an application that tracks the number of requests.</p>
+        <pre><code class="python">$ docker network create dev</code></pre>
+        <pre><code class="python">$ docker run --net dev -d -p 5000:5000 frenchben/trainingwheels:latest</code></pre>
+        <p><mark>-p</mark> exposes the port 5000 to the host and matches it to port 5000 to container process</p>
+      </section>
+      <section class="future">
+        <p>If we connect to the application now, we will see an error page:</p>
+        <img src="/img/trainingwheels-error.png" class="noborder" />
+        <p>This is because the Redis service is not running;the container tries to resolve the name <em>redis</em>.</p>
+      </section>
+      <section class="future">
+        <h4>Start the data store</h4>
+        <p>We need to start a Redis container.</p>
+        <p>That container must be on the same network as the web server.</p>
+        <p>It must have the right name (<em>redis</em>) so the application can find it.</p>
+        <pre><code class="python">$ docker run --net dev --name redis -d redis</code></pre>
+      </section>
+      <section class="future">
+        <h4>Test the web server again</h4>
+        <p>If we connect to the application now, we should see that the app is working correctly:</p>
+        <img src="/img/trainingwheels-ok.png" class="noborder" />
+        <p>When the app tries to resolve redis, instead of getting a DNS error, it gets the IP address of our Redis container.</p>
+      </section>
+    </section>
+    <section>
+      <h3>Our first compose file</h3>
+      <p>Create the following <em>docker-compose.yml</em> in a <em>trainingwheels</em> directory:</p> 
+      <pre><code class="python">version: '3'
+
+services:
+  web:
+    image: frenchben/trainingwheels:latest
+    ports:
+      - 5000:5000
+    networks:
+      - dev
+  redis:
+    image: redis
+    networks:
+      - dev
+networks:
+  dev:
+  </code></pre>
+    </section>
+    <section>
+      <h3>Launching our stack with Docker Compose</h3>
+      <pre><code class="python">$ docker-compose up -d</code></pre>
+      <p><mark>-d</mark> will create the containers in the background</p>
+      <p>Once the containers are up, we can inspect what compose created</p>
+      <pre><code class="python">$ docker-compose ps</code></pre>
+      <pre><code class="python">$ docker ps</code></pre>
+      <pre><code class="python">$ docker network ls</code></pre>
+      <p>Notice that all of our resources have the name of our folder in front of them: <em>trainingwheels_</em></p>
+    </section>
+    <section>
+      <h3>Stopping the application</h3>
+      <p>To tear down the app, you can gracefully shut it down. Compose will wait 10s for the containers to stop:</p>
+      <pre><code class="python">$ docker-compose down</code></pre>
+    </section>
+    <section>
+      <section>
+        <h3>Compose file requirements</h3>
+        <p>A Docker Compose file has the following required declarations:</p>
+        <ul>
+          <li><em>version</em>: establishes the version of the file and the sections allowed.</li>
+          <li><em>services</em>: declares the services that compose will create.</li>
+        </ul>
+      </section>
+      <section class="future">
+        <p>Services will have a name with the following declations: </p>
+        <ul>
+          <li><em>image</em>: defines the image that the service will use.</li>
+        </ul>
+        <p>All Compose references can be found within the <a href="https://docs.docker.com/compose/compose-file/" target="_blank">Docker Compose docs</a></p>
+      </section>
+    </section>
+    <section>
+      <h3>Docker Volumes</h3>
+      <p>If we bring our stack back up you'll notice that the count resets to 0.</p>
+      <p>What if we wanted to keep the count even after the stack was torn down? That's when volumes come in handy.</p>
+      <p>Volumes exist independently of containers. <br/>They can be listed/created/removed via the <mark>docker volume</mark> command.</p>
+      <pre><code class="python">$ docker volume ls
+DRIVER              VOLUME NAME
+local               e54bc8728936413056fbf2411446477c00...
+      </code></pre>
+    </section>
+    <section>
+      <section>
+        <h3>Using volumes</h3>
+        <p>Volumes can be created without a container, then used in multiple containers. Let's create a volume directly.</p>
+        <pre><code class="python">$ docker volume create --name=website
+website
+$ docker volume ls
+DRIVER              VOLUME NAME
+local               e54bc8728936413056fbf2411446477c00633f6ad....
+local               website
+        </code></pre>
+      </section>
+      <section class="future">
+        <h4>Using our named volumes</h4>
+        <p>Volumes are used with the <mark>-v</mark> option. When a host path does not contain a /, it is considered to be a volume name.</p>
+        <pre><code class="python">$ docker run -d -p 8888:80 -v website:/usr/share/nginx/html nginx
+4f49fced8714435d25492e1fffd012760e65....
+        </code></pre>
+        <p>Verify that nginx is in fact running:</p>
+        <pre><code class="python">$ curl localhost:8888</code></pre>
+      </section>
+      <section class="future">
+        <h4>Using our named volumes</h4>
+        <p>We can now connect to the same volume using another container and modify the HTML.</p>
+        <pre><code class="python">$ docker run -it -v website:/website ubuntu
+root@37d7035ada2a:/# cd website/
+root@37d7035ada2a:/website# cat index.html
+      </code></pre>
+      <p>Install an editor of your choice to edit the file and confirm that it's in fact working.</p>
+      <pre><code class="python">$ curl localhost:8888</code></pre>
+      </section>
+    </section>
+    <section>
+      <h3>Compose and Volumes</h3>
+      <p>Back to our original file, we want to save our data! Edit your compose file and add a data volume at the end and a matching one to our redis:</p>
+      <pre><code class="python">version: '3'
+
+services:
+  web:
+    image: frenchben/trainingwheels:latest
+    ports:
+      - 5000:5000
+    networks:
+      - dev
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    networks:
+      - dev
+    volumes:
+      - data-volume:/data
+networks:
+  dev:
+volumes:
+  data-volume:
+    </code></pre>
+    <p><em>command</em>: for redis to use persistent storage we have to overwrite the default <mark>CMD</mark>. <br/>
+    This is the equivalent for compose.</p>
+    </section>
+    <section class="future">
+      <h4>Bring the stack up</h4>
+      <pre><code class="python">$ docker-compose up</code></pre>
+      <p>To stop the application simply hit CTRL + C</p>
+      <p>bring it back up again and verify that our request count didn't reset!</p>
+      <img src="/img/success.gif" class="noborder" />
+  </section>
+
+  <section data-background="/img/thumbsup.gif">
+    <h2>You did it!!!</h2>
+    <h3>Questions?</h3>
+  </section>
+
+  <section>
+    <h3>Resources</h3>
+    <ul>
+      <li><a href="http://training.play-with-docker.com/" target="_blank">Training via Play-With-Docker</a></li>
+      <li><a href="https://github.com/docker/labs/tree/master/networking" target="_blank">Networking with Docker Containers</a> Tutorial</li>
+      <li><a href="http://www.docker.com/" target="_blank">Docker homepage</a></li>
+      <li><a href="https://store.docker.com" target="_blank">Docker Store</a></li>
+      <li><a href="ttp://blog.docker.com/" target="_blank">Docker blog</a></li>
+      <li><a href="ttp://docs.docker.com/" target="_blank">Docker documentation</a></li>
+    </ul>
+  </section>
+  <section>
+    <h3>Community Resources</h3>
+    <ul>
+      <li><a href="http://www.docker.com/gettingstarted/" target="_blank">Docker Getting Started Guide</a></li>
+      <li><a href="https://github.com/docker/docker" target="_blank">Docker code on GitHub</a></li>
+      <li><a href="https://community.docker.com/registrations/groups/4316" target="_blank">Docker Community Slack</a></li>
+      <li><a href="https://groups.google.com/forum/#!forum/docker-user" target="_blank">Docker mailing list</a></li>
+      <li>Docker on IRC: irc.freenode.net and channels #docker and #docker-dev</li>
+      <li>Docker on <a href="http://twitter.com/docker" target="_blank">Twitter</a></li>
+      <li>Get Docker help on <a href="http://stackoverflow.com/search?q=docker" target="_blank">Stack Overflow</a></li>
+    </ul>
+  </section>
+  
+
+    
 </div><!-- Close slides -->
 
     <div>
