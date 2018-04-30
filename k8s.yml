@@ -9,7 +9,7 @@ spec:
   loadBalancerIP: "35.202.55.161"
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 8000
     protocol: TCP
     name: http
   selector:
@@ -34,4 +34,4 @@ spec:
         image: frenchben/intro-docker:0.2
         imagePullPolicy: Always
         ports:
-        - containerPort: 8080
+        - containerPort: 8000
